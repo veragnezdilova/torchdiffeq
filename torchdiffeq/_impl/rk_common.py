@@ -169,7 +169,7 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
                                               self.norm, f0=f0)
         else:
             first_step = self.first_step
-        self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5)
+        self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5) '''
 
         # Handle step_t and jump_t arguments.
         if self.step_t is None:
@@ -190,7 +190,6 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
         self.jump_t = jump_t
         self.next_step_index = min(bisect.bisect(self.step_t.tolist(), t[0]), len(self.step_t) - 1)
         self.next_jump_index = min(bisect.bisect(self.jump_t.tolist(), t[0]), len(self.jump_t) - 1)
-        '''
       
 
     def _advance(self, next_t):
