@@ -160,8 +160,28 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
       t0 = t[0]
       f0 = self.func(t[0], self.y0)
       first_step = _select_initial_step(self.func, t[0], self.y0, self.order - 1, self.rtol, self.atol, self.norm, f0=f0)
-      self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5)
-      '''
+      self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5
+      # Handle step_t and jump_t arguments.
+      if self.step_t is None:
+        step_t = torch.tensor([], dtype=self.dtype, device=self.y0.device)
+      else:
+        step_t = _sort_tvals(self.step_t, t0)
+        step_t = step_t.to(self.dtype)
+      if self.jump_t is None:
+        jump_t = torch.tensor([], dtype=self.dtype, device=self.y0.device)
+      else:
+        jump_t = _sort_tvals(self.jump_t, t0)
+        jump_t = jump_t.to(self.dtype)
+      counts = torch.cat([step_t, jump_t]).unique(return_counts=True)[1]
+      if (counts > 1).any():
+        raise ValueError("`step_t` and `jump_t` must not have any repeated elements between them.")
+
+      self.step_t = step_t
+      self.jump_t = jump_t
+      self.next_step_index = min(bisect.bisect(self.step_t.tolist(), t[0]), len(self.step_t) - 1)
+      self.next_jump_index = min(bisect.bisect(self.jump_t.tolist(), t[0]), len(self.jump_t) - 1)
+                                       
+              '''
         t0 = t[0]
         f0 = self.func(t[0], self.y0)
         if self.first_step is None:
@@ -170,26 +190,6 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
         else:
             first_step = self.first_step
         self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5) '''
-
-        # Handle step_t and jump_t arguments.
-        if self.step_t is None:
-            step_t = torch.tensor([], dtype=self.dtype, device=self.y0.device)
-        else:
-            step_t = _sort_tvals(self.step_t, t0)
-            step_t = step_t.to(self.dtype)
-        if self.jump_t is None:
-            jump_t = torch.tensor([], dtype=self.dtype, device=self.y0.device)
-        else:
-            jump_t = _sort_tvals(self.jump_t, t0)
-            jump_t = jump_t.to(self.dtype)
-        counts = torch.cat([step_t, jump_t]).unique(return_counts=True)[1]
-        if (counts > 1).any():
-            raise ValueError("`step_t` and `jump_t` must not have any repeated elements between them.")
-
-        self.step_t = step_t
-        self.jump_t = jump_t
-        self.next_step_index = min(bisect.bisect(self.step_t.tolist(), t[0]), len(self.step_t) - 1)
-        self.next_jump_index = min(bisect.bisect(self.jump_t.tolist(), t[0]), len(self.jump_t) - 1)
       
 
     def _advance(self, next_t):
