@@ -51,7 +51,7 @@ def _select_initial_step(func, t0, y0, order, rtol, atol, norm, f0=None):
         ''' f0 = tf.convert_to_tensor(f0)
         torch.as_tensor(f0, dtype=torch.float) '''
         print(func)
-        print(type(func(t0, y0))
+        print(type(func(t0, y0)))
 
     scale = atol + torch.abs(y0) * rtol
 
