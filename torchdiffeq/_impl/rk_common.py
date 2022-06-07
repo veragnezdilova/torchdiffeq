@@ -157,6 +157,8 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
         self.mid = self.mid.to(device=device, dtype=y0.dtype)
 
     def _before_integrate(self, t):
+      t0 = t[0]
+      f0 = self.func(t[0], self.y0)
       self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5)
       '''
         t0 = t[0]
