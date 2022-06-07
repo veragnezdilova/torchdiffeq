@@ -40,7 +40,7 @@ def _select_initial_step(func, t0, y0, order, rtol, atol, norm, f0=None):
     .. [1] E. Hairer, S. P. Norsett G. Wanner, "Solving Ordinary Differential
            Equations I: Nonstiff Problems", Sec. II.4, 2nd edition.
     """
-
+    '''
     dtype = y0.dtype
     device = y0.device
     t_dtype = t0.dtype
@@ -48,8 +48,6 @@ def _select_initial_step(func, t0, y0, order, rtol, atol, norm, f0=None):
 
     if f0 is None:
         f0 = func(y0)
-        ''' f0 = tf.convert_to_tensor(f0)
-        torch.as_tensor(f0, dtype=torch.float) '''
         print('func: ', func, '\n')
         print('f0: ', f0, '\n')
         print('y0: ', y0, '\n')
@@ -73,8 +71,12 @@ def _select_initial_step(func, t0, y0, order, rtol, atol, norm, f0=None):
     if d1 <= 1e-15 and d2 <= 1e-15:
         h1 = torch.max(torch.tensor(1e-6, dtype=dtype, device=device), h0 * 1e-3)
     else:
-        h1 = (0.01 / max(d1, d2)) ** (1. / float(order + 1))
-
+        h1 = (0.01 / max(d1, d2)) ** (1. / float(order + 1))'''
+        
+    dtype = y0.dtype
+    device = y0.device    
+    h0 = torch.tensor(1e-6, dtype=dtype, device=device)
+    h1 = torch.max(torch.tensor(1e-6, dtype=dtype, device=device), h0 * 1e-3)    
     return torch.min(100 * h0, h1).to(t_dtype)
 
 
