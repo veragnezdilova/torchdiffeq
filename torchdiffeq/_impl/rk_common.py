@@ -217,7 +217,7 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
         # used for state and timelike objects respectively.
         # Then:
         # y0.dtype == self.y0.dtype
-        # f0.dtype == self.y0.dtype
+        f0.dtype == self.y0.dtype
         # t0.dtype == self.dtype
         # dt.dtype == self.dtype
         # for coeff in interp_coeff: coeff.dtype == self.y0.dtype
