@@ -161,7 +161,6 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
       f0 = self.func(t[0], self.y0)
       first_step = _select_initial_step(self.func, t[0], self.y0, self.order - 1, self.rtol, self.atol, self.norm, f0=f0)
       self.rk_state = _RungeKuttaState(self.y0, f0, t[0], t[0], first_step, [self.y0] * 5
-      # Handle step_t and jump_t arguments.
       if self.step_t is None:
         step_t = torch.tensor([], dtype=self.dtype, device=self.y0.device)
       else:
