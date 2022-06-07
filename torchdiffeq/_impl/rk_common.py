@@ -157,6 +157,8 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
         self.mid = self.mid.to(device=device, dtype=y0.dtype)
 
     def _before_integrate(self, t):
+      pass
+      '''
         t0 = t[0]
         f0 = self.func(t[0], self.y0)
         if self.first_step is None:
@@ -185,6 +187,8 @@ class RKAdaptiveStepsizeODESolver(AdaptiveStepsizeEventODESolver):
         self.jump_t = jump_t
         self.next_step_index = min(bisect.bisect(self.step_t.tolist(), t[0]), len(self.step_t) - 1)
         self.next_jump_index = min(bisect.bisect(self.jump_t.tolist(), t[0]), len(self.jump_t) - 1)
+        '''
+      
 
     def _advance(self, next_t):
         """Interpolate through the next time point, integrating as necessary."""
