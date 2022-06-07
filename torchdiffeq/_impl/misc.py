@@ -74,7 +74,8 @@ def _select_initial_step(func, t0, y0, order, rtol, atol, norm, f0=None):
         h1 = (0.01 / max(d1, d2)) ** (1. / float(order + 1))'''
         
     dtype = y0.dtype
-    device = y0.device    
+    device = y0.device 
+    t_dtype = t0.dtype
     h0 = torch.tensor(1e-6, dtype=dtype, device=device)
     h1 = torch.max(torch.tensor(1e-6, dtype=dtype, device=device), h0 * 1e-3)    
     return torch.min(100 * h0, h1).to(t_dtype)
