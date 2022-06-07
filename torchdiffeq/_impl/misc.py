@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import warnings
 from .event_handling import combine_event_functions
+import tensorflow as tf
 
 
 def _handle_unused_kwargs(solver, unused_kwargs):
@@ -47,6 +48,7 @@ def _select_initial_step(func, t0, y0, order, rtol, atol, norm, f0=None):
 
     if f0 is None:
         f0 = func(t0, y0)
+        f0 = tf.convert_to_tensor(f0)
 
     scale = atol + torch.abs(y0) * rtol
 
